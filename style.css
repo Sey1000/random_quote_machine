@@ -1,0 +1,35 @@
+body {
+  background-color: #27FB6B; }
+
+#quote {
+  border: 3px solid white;
+  color: #0A2E36;
+  border-radius: 4px;
+  width: 500px;
+  padding: 30px;
+  margin: 100px auto; }
+
+.buttons-container {
+  display: flex;
+  justify-content: space-between; }
+
+.quote-heading {
+  margin-top: 0; }
+
+.author-heading {
+  margin-top: 20px; }
+
+.some-button {
+  background-color: white;
+  margin-top: 30px;
+  border-radius: 3px;
+  padding: 7px 12px;
+  color: #27FB6B;
+  font-weight: bolder; }
+  .some-button:hover {
+    color: #27FB6B;
+    opacity: 0.9;
+    cursor: pointer;
+    text-decoration: none; }
+
+/*# sourceMappingURL=style.css.map */
