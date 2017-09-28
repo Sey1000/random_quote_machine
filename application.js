@@ -1,32 +1,44 @@
-var quotes = [
-  ["I'm all in favor of keeping dangerous weapons out of the hands of fools. Let's start with typewriters.", "Frank Lloyd Wright"],
-  ["If you can't get rid of the skeleton in your closet, you'd best teach it to dance.", "George Bernard Shaw"],
-  ["Greed, for lack of a better word, is good.", "Wall Street"],
-  ["I can write better than anybody who can write faster, and I can write faster than anybody who can write better.", "A. J. Liebling"],
-  ["In the End, we will remember not the words of our enemies, but the silence of our friends.", "Martin Luther King Jr."]
-]
-
-function openURL(url){
-  window.open(url, 'Share', 'width=550, height=400, toolbar=0, scrollbars=1 ,location=0 ,statusbar=0,menubar=0, resizable=0');
-}
-
-function getQuote() {
-  var randNum = Math.floor(Math.random() * quotes.length);
-  return quotes[randNum];
-}
-
-function putQuote() {
-  var thisQuote = getQuote();
-  $("#quote-text").text(thisQuote[0]);
-  $("#quote-author").text(thisQuote[1]);
-}
-
 $(document).ready(function() {
-  putQuote();
+  getQuote();
   $("#new-quote").click(function() {
-    putQuote();
+    getQuote();
   });
   $("#tweet-me").click(function() {
-    openURL('https://twitter.com/intent/tweet?text=' + encodeURIComponent('"' + getQuote() + '"'));
-  })
+
+  });
 });
+
+var colors = ["#F6511D", "#FFB400", "#00A6ED", "#7FB800", "#AF9164", "#6F1A07"]
+var thisQuote = {};
+var xhr = new XMLHttpRequest();
+
+function getQuote() {
+  xhr.open('GET', "https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en", true);
+  xhr.send();
+  xhr.addEventListener("readystatechange", processRequest, false);
+}
+
+function processRequest(e) {
+  if (xhr.readyState == 4 && xhr.status == 200) {
+    thisQuote = JSON.parse(xhr.responseText);
+    $("#quote-text").text(thisQuote.quoteText);
+    var author = thisQuote.quoteAuthor || "Anonymous"
+    $("#quote-author").text(author);
+    changeColor();
+    loadTweetText();
+  }
+}
+
+function changeColor() {
+  var randomNumber = Math.floor(Math.random() * colors.length);
+  var thisColor = colors[randomNumber];
+  $("body").css("background-color", thisColor);
+  $(".some-button").css("color", thisColor);
+}
+
+function loadTweetText() {
+  var fullQuote = thisQuote.quoteText + " -" + thisQuote.quoteAuthor;
+  console.log(fullQuote);
+  var encoded = encodeURIComponent(fullQuote);
+  $("#tweet-me").attr('href', "https://twitter.com/intent/tweet?text=" + encoded);
+}
